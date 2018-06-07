@@ -1,0 +1,44 @@
+version: '3.3'
+services:
+  nginx:
+    image: nginx
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    networks:
+      - distributed
+    deploy:
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 120s
+      labels:
+        traefik.frontend.rule: "Host:traefik,demo.gigenet.com"
+        traefik.port: "80"
+
+  traefik:
+    image: traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/traefik/certs/:/certs/
+      - /opt/traefik/traefik.toml:/traefik.toml
+    deploy:
+      restart_policy:
+        delay: 120s
+        max_attempts: 10
+        window: 120s
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      -  distributed
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    command: --docker --docker.swarmmode --docker.domain=demo --docker.watch --web --loglevel=DEBUG
+
+networks:
+  distributed:
+    driver: overlay

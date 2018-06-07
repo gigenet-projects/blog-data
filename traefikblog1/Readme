@@ -1,0 +1,9 @@
+Introduction to Traefik, the load balancer.
+
+Two configuration files utilized for this demonstration:
+  traefik.toml
+  docker-compose.yaml
+
+How-to spin up the demo on a Docker Swarm Cluster:
+
+  docker stack deploy --compose-file=docker-compose.yaml demo 
