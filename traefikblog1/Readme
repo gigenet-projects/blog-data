@@ -1,8 +1,14 @@
 Introduction to Traefik, the load balancer.
 
 Two configuration files utilized for this demonstration:
+
   traefik.toml
   docker-compose.yaml
+
+The traefik configuration utilizes a SSL certificate.  You need to build your own with the followinbg command:
+
+  openssl req -x509 -newkey rsa:4096 -keyout website-pass.key -out website.crt -days 365
+  openssl rsa -in website-pass.key -out website.key
 
 How-to spin up the demo on a Docker Swarm Cluster:
 
