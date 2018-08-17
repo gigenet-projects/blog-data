@@ -1,0 +1,20 @@
+---
+
+ - name: System Specifications
+   setup:
+   register: system_facts
+
+ - include: 'docker-install.yml'
+   tags:
+     - install
+
+ - include: 'swarm-manager.yml'
+   when: inventory_hostname in groups.DockerManagement
+   tags:
+     - manager
+
+ - include: 'swarm-worker.yml'
+   when: (groups.DockerManagement[0] in groups.DockerManagement) or (inventory_hostname in groups.DockerNodes)
+   tags:
+     - worker
+     - manager

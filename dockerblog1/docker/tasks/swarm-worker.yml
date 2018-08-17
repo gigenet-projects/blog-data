@@ -1,0 +1,11 @@
+---
+
+  - script: swarm-token.py "worker"
+    register: docker_worker_token
+    when: groups.DockerManagement[0] == inventory_hostname
+
+  - shell: 'if [[ $(docker info 2>&1) == *"Swarm: active"* ]]; then echo "active"; fi'
+    register: is_active
+
+  - shell: docker swarm join --token {{ hostvars[groups.DockerManagement[0]].docker_worker_token.stdout_lines[0] }} {{ groups.DockerManagement[0] }}:2377
+    when: (inventory_hostname in groups.DockerNodes) and (is_active.stdout != "active")

@@ -1,0 +1,28 @@
+---
+
+  - name: Inject Docker Yum Repository
+    template: src=docker.repo.j2 dest='/etc/yum.repos.d/docker.repo'
+    when: ansible_os_family == "RedHat"
+
+  - name: Install System Updates and Docker Engine
+    yum:
+      name: '*'
+      state: latest
+    when: ansible_os_family == "RedHat"
+
+  - yum:
+      name: 'docker-engine'
+      state: latest
+    when: ansible_os_family == "RedHat"
+
+  - name: Configure Docker engine
+    service:
+      name: docker
+      state: started
+      enabled: yes
+    when: ansible_os_family == "RedHat"
+
+  - group:
+      name: docker
+      state: present
+    when: ansible_os_family == "RedHat"

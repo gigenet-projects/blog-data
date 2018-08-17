@@ -1,0 +1,6 @@
+---
+
+- hosts: DockerSwarm
+  remote_user: root
+  roles:
+    - { role: docker, tags: ['install', 'manager', 'worker'] }
